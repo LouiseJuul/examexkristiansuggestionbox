@@ -17,11 +17,11 @@ async function createServer() {
   await mongoose.connect(MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 
   // Create data
-  const kittenDB = require('./kittenDB')(mongoose);
-  await kittenDB.bootstrap();
+  const suggestionDB = require('./suggestionDB')(mongoose);
+  await suggestionDB.bootstrap();
   
   // Require routes
-  const routes = require("./routes")(kittenDB); // Inject mongoose into routes module
+  const suggestionRouter = require("./suggestionRouter")(suggestionDB); // Inject mongoose into routes module
 
   // Add middleware
   app.use(bodyParser.json()); 
@@ -31,7 +31,7 @@ async function createServer() {
   app.use(express.static(path.resolve('..', 'client', 'build'))); 
   
   // Add routes
-  app.use("/api/kittens", routes);
+  app.use("/api/suggestions", suggestionRouter);
 
   // "Redirect" all non-API GET requests to React's entry point (index.html)
   app.get('*', (req, res) =>
