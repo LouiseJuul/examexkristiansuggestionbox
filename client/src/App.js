@@ -10,13 +10,18 @@ const authService = new AuthService(`${API_URL}/users/authenticate`);
 
 function App() {
   const [data, setData] = useState([]);
+
+  function compare(a, b) {
+    if (a.title > b.title) return 1;
+    else return -1;
+  }
   
   useEffect(() => {
     async function getData() {
       const url = `${API_URL}/suggestions`;
       const response = await fetch(url);
       const data = await response.json();
-      setData(data);
+      setData(data.sort(compare));
     }
     getData();
   }, []); 
@@ -28,6 +33,14 @@ function App() {
     } catch (e) {
       console.log("Login", e);
     }
+  }
+
+  async function postSignature(id, username) {
+    console.log("Adding the signature", username);
+    console.log("id", id);
+
+    // TODO: Post the username to /api/suggestions/:id/signature
+    // TODO: username in the body
   }
 
   let loginContent = <p>Is logged in</p>
@@ -44,7 +57,10 @@ function App() {
       <Router>
         <Suggestions path="/" suggestions={data}></Suggestions>
         <Suggestion path="/:id" 
-          getSuggestion={id => data.find(s => s._id === id)}>
+          getSuggestion={id => data.find(s => s._id === id)}
+          username={authService.getUsername()}
+          postSignature={postSignature}
+          >
         </Suggestion>
       </Router>
     </>

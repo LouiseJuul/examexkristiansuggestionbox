@@ -1,3 +1,5 @@
+import jwtDecode from "jwt-decode";
+
 /**
  * Service class for authenticating users against an API
  * and storing JSON Web Tokens in the browser's LocalStorage.
@@ -32,6 +34,11 @@ class AuthService {
     }
      */
     return (this.getToken() !== null);
+  }
+
+  getUsername() {
+    const data = jwtDecode(this.getToken());
+    return data.username;
   }
 
   setToken(token) {
