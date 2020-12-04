@@ -33,6 +33,18 @@ module.exports = (mongoose) => {
     return suggestion.save();
   }
 
+  async function createSignature(id, username) {
+    const date = Date.now();
+    const newSignature = {username: username, date: date};
+    const suggestion = await this.getSuggestion(id);
+
+    // Add the signature to the suggestion
+    console.log(suggestion);
+    suggestion.signatures.push(newSignature);
+
+    return suggestion.save();
+  }
+
   async function bootstrap() {
     let l = (await getSuggestions()).length;
     console.log("Suggestion collection size:", l);
@@ -49,6 +61,7 @@ module.exports = (mongoose) => {
     getSuggestion,
     getSuggestions,
     createSuggestion,
+    createSignature,
     bootstrap
   }
 }

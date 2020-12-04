@@ -13,9 +13,11 @@ module.exports = (suggestionDB) => {
     res.json(suggestion);
   });
 
-  router.post('/', async (req, res) => {
-    // TODO: Implement!
-    res.json({msg: "Not implemented :("});
+  router.post('/:id/signature', async (req, res) => {
+    const id = req.params.id;
+    const username = req.body.username;
+    const result = await suggestionDB.createSignature(id, username);
+    res.json(result);
   });
 
   return router;
